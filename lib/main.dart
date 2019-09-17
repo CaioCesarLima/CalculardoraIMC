@@ -217,6 +217,41 @@ class Fmc extends StatefulWidget {
 }
 
 class _FmcState extends State<Fmc> {
+  TextEditingController _idade = TextEditingController();
+  TextEditingController _batimentos = TextEditingController();
+
+  String _infoText = "Informe seus Dados";
+  String _infoTextBatimentos = "Informe o número de batimentos contados";
+
+  void _resetFields() {
+    setState(() {
+      _idade.text = "";
+      _batimentos.text = "";
+      _infoText = "Informe seus Dados";
+    });
+  }
+
+  void _calcular() {
+    setState(() {
+      int idade = int.parse(_idade.text);
+      int menosidade = 220 - idade;
+      double maxcardia = menosidade * 85 / 100;
+      print(maxcardia);
+      _infoText =
+          "Sua frequência  máxima cardiáca é: ${maxcardia.toStringAsFixed(0)}";
+    });
+  }
+
+  void calculoBatimentos() {
+    setState(() {
+      int batimentos = int.parse(_batimentos.text);
+      int result = batimentos * 6;
+      
+      _infoTextBatimentos =
+          "Sua frequência cardiáca no momento é: ${result.toStringAsFixed(0)} bpm";
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -230,43 +265,31 @@ class _FmcState extends State<Fmc> {
             children: <Widget>[
               Icon(
                 Icons.person_outline,
-                size: 120,
+                size: 80,
                 color: Colors.blue,
               ),
               Container(
-                margin: EdgeInsets.all(10),
+                margin: EdgeInsets.only(left: 20, right: 20),
                 width: double.infinity,
                 child: TextField(
-                  controller: _peso,
-                  maxLength: 3,
+                  controller: _idade,
+                  maxLength: 2,
                   keyboardType: TextInputType.number,
                   decoration: InputDecoration(
-                      labelText: "Peso (Kg)",
-                      labelStyle: TextStyle(color: Colors.blue)),
-                ),
-              ),
-              Container(
-                margin: EdgeInsets.all(10),
-                width: double.infinity,
-                child: TextField(
-                  controller: _altura,
-                  maxLength: 3,
-                  keyboardType: TextInputType.number,
-                  decoration: InputDecoration(
-                      labelText: "Altura (Cm)",
+                      labelText: "Idade",
                       labelStyle: TextStyle(color: Colors.blue)),
                 ),
               ),
               Padding(
                 padding:
-                    const EdgeInsets.symmetric(horizontal: 20, vertical: 20),
+                    const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
                 child: Container(
                   height: 50,
                   decoration: BoxDecoration(
                       color: Colors.blue,
                       borderRadius: BorderRadius.all(Radius.circular(15))),
                   child: FlatButton(
-                    child: Text("Verificar"),
+                    child: Text("Calcular frequência máxima cardiáca"),
                     onPressed: () {
                       _calcular();
                     },
@@ -285,14 +308,64 @@ class _FmcState extends State<Fmc> {
                 )),
               ),
               Container(
-                margin: EdgeInsets.all(20),
+                margin: EdgeInsets.all(6),
                 width: double.infinity,
                 child: Center(
                     child: Text(
-                  "$infoText",
+                  "$_infoText",
                   style: TextStyle(),
                 )),
-              )
+              ),
+              SizedBox(
+                height: 20,
+              ),
+              Container(
+                margin: EdgeInsets.all(6),
+                width: double.infinity,
+                child: Center(
+                    child: Text(
+                  "Faça a contagem de batimentos durante 10 segundos e informe para o calculo de sua frequência cardiáca",
+                  style: TextStyle(),
+                  textAlign: TextAlign.center,
+                )),
+              ),
+              Container(
+                margin: EdgeInsets.only(left: 20, right: 20),
+                width: double.infinity,
+                child: TextField(
+                  controller: _batimentos,
+                  maxLength: 3,
+                  keyboardType: TextInputType.number,
+                  decoration: InputDecoration(
+                      labelText: "Batimentos",
+                      labelStyle: TextStyle(color: Colors.blue)),
+                ),
+              ),
+              Padding(
+                padding:
+                    const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
+                child: Container(
+                  height: 50,
+                  decoration: BoxDecoration(
+                      color: Colors.blue,
+                      borderRadius: BorderRadius.all(Radius.circular(15))),
+                  child: FlatButton(
+                    child: Text("Verificar bpm"),
+                    onPressed: () {
+                      calculoBatimentos();
+                    },
+                  ),
+                ),
+              ),
+              Container(
+                margin: EdgeInsets.all(8),
+                width: double.infinity,
+                child: Center(
+                    child: Text(
+                  "$_infoTextBatimentos",
+                  style: TextStyle(),
+                )),
+              ),
             ],
           ),
         ),
